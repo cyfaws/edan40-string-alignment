@@ -43,6 +43,10 @@ optAlignments (x:xs) (y:ys) = maximaBy (uncurry similarityScore) ( -- uncurry: (
       attachHeads x y (optAlignments xs ys)
     )
 
+optAlignments2 :: String -> String -> [AlignmentType]
+optAlignments2 [] [] = [([], [])]
+--optAlignments2 (x:xs) (y:ys) = table
+
 outputOptAlignments :: String -> String -> IO ()
 outputOptAlignments string1 string2 = do
    let alignments = optAlignments string1 string2
@@ -64,10 +68,13 @@ similarityScore2 xs ys = table !! (length xs) !! (length ys)
    entry i 0 = i * scoreSpace
    entry 0 j = j * scoreSpace
    entry i j = maximum
-      [ (table  !!(i-1)     !!(j-1) ) + (score (xs!!(i - 1))  (ys!!(j - 1)) ),
-        (table  !!i         !!(j-1) ) + (score ('-'        )  (ys!!(j - 1)) ),
-        (table  !!(i-1)     !!j     ) + (score (xs!!(i - 1))   ('-')        ) ]
-   
+      [ (table  !!(i-1)     !!(j-1) ) + (score x   y ),
+        (table  !!i         !!(j-1) ) + (score '-' y ),
+        (table  !!(i-1)     !!j     ) + (score x ('-') ) ]
+
+           where
+           x = xs!!(i-1)
+           y = ys!!(j-1)
 
 mcsLength :: Eq a => [a] -> [a] -> Int
 mcsLength xs ys = mcsLen (length xs) (length ys)
