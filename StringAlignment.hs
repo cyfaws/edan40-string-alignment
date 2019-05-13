@@ -92,3 +92,8 @@ mcsLength xs ys = mcsLen (length xs) (length ys)
       where
          x = xs!!(i-1)
          y = ys!!(j-1)
+
+-- Gets the substrings of a certain string. E.g; "hej" -> ["hej", "ej", "j", ""]
+substrings :: String -> [String]
+substrings ""   = [""]
+substrings s  = s:(substrings (tail s))
