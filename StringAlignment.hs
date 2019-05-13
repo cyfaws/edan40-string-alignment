@@ -53,3 +53,35 @@ outputOptAlignments string1 string2 = do
          spaces :: String -> String
          spaces [] = []
          spaces (x:xs) = x : ' ' : spaces (xs)
+
+similarityScore2 :: String -> String -> Int
+similarityScore2 xs ys = table !! (length xs) !! (length ys)
+   where
+   table = [[ entry i j | j<-[0..]] | i<-[0..]]
+   
+   entry :: Int -> Int -> Int
+   entry 0 0 = 0
+   entry i 0 = i * scoreSpace
+   entry 0 j = j * scoreSpace
+   entry i j = maximum
+      [ (table  !!(i-1)     !!(j-1) ) + (score (xs!!(i - 1))  (ys!!(j - 1)) ),
+        (table  !!i         !!(j-1) ) + (score ('-'        )  (ys!!(j - 1)) ),
+        (table  !!(i-1)     !!j     ) + (score (xs!!(i - 1))   ('-')        ) ]
+   
+
+mcsLength :: Eq a => [a] -> [a] -> Int
+mcsLength xs ys = mcsLen (length xs) (length ys)
+  where
+    mcsLen i j = mcsTable!!i!!j
+    mcsTable = [[ mcsEntry i j | j<-[0..]] | i<-[0..] ]
+       
+    mcsEntry :: Int -> Int -> Int
+    mcsEntry _ 0 = 0
+    mcsEntry 0 _ = 0
+    mcsEntry i j
+      | x == y    = 1 + mcsLen (i-1) (j-1)
+      | otherwise = max (mcsLen i (j-1)) 
+                        (mcsLen (i-1) j)
+      where
+         x = xs!!(i-1)
+         y = ys!!(j-1)
